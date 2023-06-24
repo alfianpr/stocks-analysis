@@ -3,13 +3,21 @@ import pandas as pd
 import requests
 import os
 from bs4 import BeautifulSoup
+import argparse
+
+parser = argparse.ArgumentParser(description="stocks analysis")
+parser.add_argument("-n", help="input the company name")
+args = parser.parse_args()
+
+with open('cred') as f:
+    Auth = f.readlines()
 
 headers = {
-    "Authorization" : "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IjU3MDc0NjI3LTg4MWItNDQzZC04OTcyLTdmMmMzOTNlMzYyOSIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7InVzZSI6IkFsZmlhbnByOTkiLCJlbWEiOiJhbGZpYW5wcmF0YW1hQGhvdG1haWwuY29tIiwiZnVsIjoiQWxmaWFuIFByYXRhbWEiLCJzZXMiOiJWM2RJY3NGNXVBOFVubFE2IiwiZHZjIjoiIiwidWlkIjo2NjAyODF9LCJleHAiOjE2ODc2NzYzNzYsImlhdCI6MTY4NzU4OTk3NiwiaXNzIjoiU1RPQ0tCSVQiLCJqdGkiOiIyZTljYTJkZC0wNWJmLTRjOTYtYmE5MS1iMThlZDdmYjUyYTgiLCJuYmYiOjE2ODc1ODk5NzZ9.tOyHLRdUqQhyo8d-yTd2pKfCsT58ELzHPFTo_qOZJRnPSiXiQM-F7-xlHevf8fy7WrptSmyd6m3MLU_sCmLWtE34V6D4Jk39u7tUbUIVJfiuYbsDA9ANUl4Ldg1_m0RszxtqDA0i4xL8VAHhjcACjXsnnApVVA8eze1-ugiwQDnAmo98gms_JCV69n2iIKsTCwUaf-Z2wIrTGEztS2n5IvPO-3PNU-78gsHI3tRNld4PI_HxvPoIrACM_xQZM8eef2JJVivic54kWLqHaGnZuPR2hxM41KWUIDx4TSYiDPbBE65IGo7y8_zVlhai5ahqvo5uBmuHK9z7kBmZxBlH0Q"
+    "Authorization" : Auth[0]
 }
 
 params = {
-    "symbol" : "BBCA",
+    "symbol" : args.n,
     "data_type" : 1,
     "report_type" : 3,
     "statement_type": 2
