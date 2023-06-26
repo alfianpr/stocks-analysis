@@ -122,4 +122,6 @@ def metrics(metrics):
 
 # Discounted cash flow
 print(f"average of Free cash flow: {metrics(metrics='Free cash flow (Annual)')})")
+print(df_data)
+print(df_key)
 fcf = metrics(metrics="Free cash flow (Annual)")

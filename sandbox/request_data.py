@@ -120,4 +120,8 @@ def metrics(metrics):
     average_fcf = Average(lst = list_fcf_int)
     return average_fcf
 
+print(df_data)
+
+print(df_key)
+
 print(metrics(metrics="Free cash flow (Annual)"))
