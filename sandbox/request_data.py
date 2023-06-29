@@ -116,12 +116,13 @@ def metrics(metrics):
     fcf = df_key.loc[df_key["In Million"] == f"{metrics}"].reset_index()
     fcf_2 = fcf[fcf.columns[-3:]].replace(",", "", regex=True).replace(" ", "", regex=True).replace("B", "000000000", regex=True)
     list_fcf = fcf_2.loc[0, :].values.flatten().tolist()
-    list_fcf_int = [int(s) for s in list_fcf]
-    average_fcf = Average(lst = list_fcf_int)
-    return average_fcf
+    # list_fcf_int = [int(s) for s in list_fcf]
+    # average_fcf = Average(lst = list_fcf_int)
+    # return average_fcf
+    return list_fcf
 
-print(df_data)
+# print(df_data)
 
-print(df_key)
+# print(df_key)
 
 print(metrics(metrics="Free cash flow (Annual)"))

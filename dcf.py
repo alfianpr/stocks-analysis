@@ -4,6 +4,7 @@ import requests
 import os
 from bs4 import BeautifulSoup
 import argparse
+import re
 
 parser = argparse.ArgumentParser(description="stocks analysis")
 parser.add_argument("-n", help="input the company name")
@@ -113,15 +114,23 @@ def Average(lst):
 
 # Extract metrics
 def metrics(metrics):
+    global regex_4
     fcf = df_key.loc[df_key["In Million"] == f"{metrics}"].reset_index()
     fcf_2 = fcf[fcf.columns[-3:]].replace(",", "", regex=True).replace(" ", "", regex=True).replace("B", "000000000", regex=True)
     list_fcf = fcf_2.loc[0, :].values.flatten().tolist()
-    list_fcf_int = [int(s) for s in list_fcf]
-    average_fcf = Average(lst = list_fcf_int)
+    regex_3 = []
+    for i in list_fcf:
+        regex = re.sub(r'[(]', '-', i)
+        regex_2 = re.sub(r'[)]', '', regex)
+        regex_3.append(regex_2)
+    regex_4 = [int(s) for s in regex_3]
+    average_fcf = Average(lst = regex_4)
+    # return average_fcf
     return average_fcf
 
-# Discounted cash flow
-print(f"average of Free cash flow: {metrics(metrics='Free cash flow (Annual)')})")
-print(df_data)
-print(df_key)
-fcf = metrics(metrics="Free cash flow (Annual)")
+# print(df_data)
+
+# print(df_key)
+
+print(metrics(metrics="Free cash flow (Annual)"))
+print(regex_4)
