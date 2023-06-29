@@ -13,6 +13,7 @@ List option : income_statement, balance_sheet, cash_flow
 '''
 TYPE_FREE_CASH_FLOW = "cash_flow"
 TYPE_SHARE_OUTSTANDING = "income_statement"
+TYPE_NET_DEBT_LEVEL = "balance_sheet"
 
 # Convert configuration
 match TYPE_FREE_CASH_FLOW:
@@ -30,6 +31,14 @@ match TYPE_SHARE_OUTSTANDING:
         CONV_SHARE_OUTSTANDING = 2
     case "cash_flow":
         CONV_SHARE_OUTSTANDING = 3
+
+match TYPE_NET_DEBT_LEVEL:
+    case "income_statement":
+        CONV_NET_DEBT_LEVEL = 1
+    case "balance_sheet":
+        CONV_NET_DEBT_LEVEL = 2
+    case "cash_flow":
+        CONV_NET_DEBT_LEVEL = 3
 
 # Get user input configuration
 parser = argparse.ArgumentParser(description="stocks analysis")
