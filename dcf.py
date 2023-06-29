@@ -116,7 +116,10 @@ def Average(lst):
 def metrics(metrics):
     global regex_4
     fcf = df_key.loc[df_key["In Million"] == f"{metrics}"].reset_index()
-    fcf_2 = fcf[fcf.columns[-3:]].replace(",", "", regex=True).replace(" ", "", regex=True).replace("B", "000000000", regex=True)
+    try:
+        fcf_2 = fcf[fcf.columns[-3:]].replace(",", "", regex=True).replace(" ", "", regex=True).replace("B", "000000000", regex=True)
+    except:
+        fcf_2 = fcf[fcf.columns[-2:]].replace(",", "", regex=True).replace(" ", "", regex=True).replace("B", "000000000", regex=True)
     list_fcf = fcf_2.loc[0, :].values.flatten().tolist()
     regex_3 = []
     for i in list_fcf:
@@ -132,5 +135,5 @@ def metrics(metrics):
 
 # print(df_key)
 
-print(metrics(metrics="Free cash flow (Annual)"))
-print(regex_4)
+print("Average free cash flow in the last 3 years", metrics(metrics="Free cash flow (Annual)"))
+print("Free cash flow in the last 3 years :", regex_4)
