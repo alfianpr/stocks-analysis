@@ -6,39 +6,71 @@ from bs4 import BeautifulSoup
 import argparse
 import re
 
+# Configuration
+'''
+This variable has purpose to scrape financial report type.
+List option : income_statement, balance_sheet, cash_flow
+'''
+TYPE_FREE_CASH_FLOW = "cash_flow"
+TYPE_SHARE_OUTSTANDING = "income_statement"
+
+# Convert configuration
+match TYPE_FREE_CASH_FLOW:
+    case "income_statement":
+        CONV_FREE_CASH_FLOW = 1
+    case "balance_sheet":
+        CONV_FREE_CASH_FLOW = 2
+    case "cash_flow":
+        CONV_FREE_CASH_FLOW = 3
+
+match TYPE_SHARE_OUTSTANDING:
+    case "income_statement":
+        CONV_SHARE_OUTSTANDING = 1
+    case "balance_sheet":
+        CONV_SHARE_OUTSTANDING = 2
+    case "cash_flow":
+        CONV_SHARE_OUTSTANDING = 3
+
+# Get user input configuration
 parser = argparse.ArgumentParser(description="stocks analysis")
 parser.add_argument("-n", help="input the company name")
 args = parser.parse_args()
 
-with open('cred') as f:
-    Auth = f.readlines()
+# Scrape requirements
 
-headers = {
-    "Authorization" : Auth[0]
-}
+def scrape_finance(TYPE):
+    global params, soup
 
-params = {
-    "symbol" : args.n,
-    "data_type" : 1,
-    "report_type" : 3,
-    "statement_type": 2
-}
+    ENDPOINT = "https://exodus.stockbit.com/findata-view/company/financial"
 
-cashflow = requests.get("https://exodus.stockbit.com/findata-view/company/financial", params=params, headers=headers)
+    with open('cred') as f:
+        Auth = f.readlines()
 
-print(cashflow.status_code)
+    headers = {
+        "Authorization" : Auth[0]
+    }
 
-df_0 = cashflow.json()
-df_1 = pd.json_normalize(df_0)
-df_2 = json.loads(pd.Series.to_json(df_1))
-df_3 = pd.DataFrame(df_2)
-df_3["data.html_report"].to_csv(f"data/{params['symbol']}.csv", index=False, header=False)
-os.rename(f"data/{params['symbol']}.csv", f"data/{params['symbol']}.html")
+    params = {
+        "symbol" : args.n,
+        "data_type" : 1,
+        "report_type" : TYPE,
+        "statement_type": 2
+    }
 
-soup = BeautifulSoup(open(f"data/{params['symbol']}.html"),'html.parser')
+    cashflow = requests.get(ENDPOINT, params=params, headers=headers)
+
+    print(cashflow.status_code)
+
+    df_0 = cashflow.json()
+    df_1 = pd.json_normalize(df_0)
+    df_2 = json.loads(pd.Series.to_json(df_1))
+    df_3 = pd.DataFrame(df_2)
+    df_3["data.html_report"].to_csv(f"data/{params['symbol']}_{TYPE}.csv", index=False, header=False)
+    os.rename(f"data/{params['symbol']}_{TYPE}.csv", f"data/{params['symbol']}_{TYPE}.html")
+    soup = BeautifulSoup(open(f"data/{params['symbol']}_{TYPE}.html"),'html.parser')
 
 # scrape the main data
-def scrape_data():
+def scrape_data(TYPE):
     header_elements = soup.find_all("table")[0].find("tr")
     data_elements = soup.find_all("table")[0].find_all("tr")[1:]
 
@@ -73,7 +105,7 @@ def scrape_data():
     return dataFrame
 
 # scrape key ratio
-def scrape_key():
+def scrape_key(TYPE):
     header_elements_2 = soup.find_all("table")[1].find("tr")
     data_elements_2 = soup.find_all("table")[1].find_all("tr")[1:]
 
