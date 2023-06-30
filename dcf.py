@@ -7,7 +7,9 @@ import argparse
 import re
 from decimal import Decimal
 
-# Configuration
+# Asumption configuration
+
+# Scrape_configuration
 '''
 This variable has purpose to scrape financial report type.
 List option : income_statement, balance_sheet, cash_flow
@@ -178,7 +180,42 @@ def metrics(metrics, dataframe, average):
 # Scraped metrics
 average_free_cash_flow = metrics(metrics="Free cash flow (Annual)", dataframe=df_fcf_key, average=3)
 share_outstanding = metrics(metrics="Share Outstanding", dataframe=df_so_key, average=1)
-net_debt = metrics(metrics="Net Debt (Annual)", dataframe=df_nd_key, average=3)
+net_debt = metrics(metrics="Net Debt (Annual)", dataframe=df_nd_key, average=1)
+
+# Asumption metrics
+G15 = 0.12
+G610 = 0.09
+TGR = 0.02
+DR = 0.09
+
+# DCF calculation
+E_1_5 = average_free_cash_flow*(G15+1)**5
+E_6_10 = E_1_5*(G610+1)**5
+Eterminal = E_6_10*(1+TGR)/(DR-TGR)
+F10 = E_6_10/(1+DR)**10
+
+lst_E15 = []
+for i in range(5):
+    n = i+1
+    lst_E15.append(average_free_cash_flow*(G15+1)**n)
+lst_E610 = []
+for i in range(5):
+    n = i+1
+    lst_E610.append(E_1_5*(G610+1)**n)
+
+tot_E_list = lst_E15+lst_E610 #+[float(Eterminal)]
+
+# tot_E15 = sum(lst_E15)
+# tot_E610 = sum(lst_E610)
+
+lst_Fn = []
+for i in range(10):
+    n = i + 1
+    lst_Fn.append(tot_E_list[i]/(1+DR)**n)
+
+Fn_Terminal = Eterminal/(1+DR)**10
+tot_Fn = sum(lst_Fn+[float(Fn_Terminal)])
+intrinsic = round((tot_Fn - net_debt)/share_outstanding, 2)
 
 if __name__ == "__main__":
     if req.status_code == 200:
