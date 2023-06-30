@@ -221,15 +221,20 @@ if __name__ == "__main__":
     if req.status_code == 200:
         print("Data received")
         try:
-            print("Average free cash flow in the last 3 years: ", average_free_cash_flow)
+            print(f"The intrinsic value of {params['symbol']} using DCF method is:", "\nRp", intrinsic)
+        except:
+            print("Can't get the financial data")
+        print("################# Key financial report ####################")
+        try:
+            print("Average free cash flow in the last 3 years:", "Rp", average_free_cash_flow)
         except:
             print("Can't get the financial data")
         try:
-            print("Share Outstanding: ", share_outstanding)
+            print("Share Outstanding:", "Rp", share_outstanding)
         except:
             print("Can't get the financial data")
         try:
-            print("Total Net Debt: ", net_debt)
+            print("Total Net Debt:", "Rp", net_debt)
         except:
             print("Can't get the financial data")
     else:
