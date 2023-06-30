@@ -175,7 +175,7 @@ def metrics(metrics, dataframe, average):
     average_fcf = Average(lst = regex_4)
     return average_fcf
 
-
+# Scraped metrics
 average_free_cash_flow = metrics(metrics="Free cash flow (Annual)", dataframe=df_fcf_key, average=3)
 share_outstanding = metrics(metrics="Share Outstanding", dataframe=df_so_key, average=1)
 net_debt = metrics(metrics="Net Debt (Annual)", dataframe=df_nd_key, average=3)
